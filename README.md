@@ -1,6 +1,8 @@
 <h1><p align=center>Termplug.nvim</p></h1>
-<h3><p align=center>Simple plugin to toggle a floating terminal window with customizable starting program</p></h3>
+<h3><p align=center><sup>Simple neovim plugin to toggle a floating terminal window with customizable starting program</sup></p></h3>
 <br \><br \>
+
+![Screenshot 1](https://user-images.githubusercontent.com/45213563/222807806-4a4b9e21-bacb-42a3-ba69-2ed791ec765f.png)
 
 ## ⚙️ Features
 - ~0ms load time
