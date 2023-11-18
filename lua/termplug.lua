@@ -7,7 +7,7 @@ local function open_window(process)
     local ui_info = vim.api.nvim_list_uis()[1]
     local width = math.floor(ui_info.width * size)
     local height = math.floor(ui_info.height * size)
-    local border = "single"
+    local border = "rounded"
     if size == 1 then
         border = "none"
     end
