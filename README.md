@@ -15,21 +15,32 @@ This plugin exposes to the user only one function:
 ## 📦 Installation
 - With [folke/lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
-{ "Ernest1338/termplug.nvim" },
+{ "Ernest1338/termplug.nvim" }
 ```
+
 - With [wbthomason/packer.nvim](https://github.com/wbthomason/packer.nvim)
 ```lua
 use "Ernest1338/termplug.nvim"
 ```
 
+- With [echasnovski/mini.deps](https://github.com/echasnovski/mini.deps)
+```lua
+add("Ernest1338/termplug.nvim")
+```
+
 ## 🚀 Usage
+Firstly, call the `setup` function with optional config (see configuration options below):
+```lua
+require("termplug").setup()
+```
+
 In your init.lua, set the mapping to toggle a terminal window:
 ```lua
-vim.keymap.set({ "n", "t" }, "<A-i>", "<cmd> lua require('termplug').toggle() <CR>")
+vim.keymap.set({ "n", "t" }, "<A-i>", "<cmd> Term <CR>")
 ```
 If you want to toggle different process, eg. lazygit use:
 ```lua
-vim.keymap.set({ "n", "t" }, "<C-g>", "<cmd> lua require('termplug').toggle('lazygit') <CR>")
+vim.keymap.set({ "n", "t" }, "<C-g>", "<cmd> Term lazygit <CR>")
 ```
 
 ## 🔧 Configuration
@@ -55,6 +66,14 @@ use {
 }
 ```
 
+- For [echasnovski/mini.deps](https://github.com/echasnovski/mini.deps)
+```lua
+later(function()
+    add("Ernest1338/termplug.nvim")
+    require("termplug").setup({ size = 0.5 })
+end)
+```
+
 ## ⚡ Requirements
 - Neovim >= **v0.7.0**
 
@@ -62,7 +81,8 @@ use {
 
 Because I wanted a simple plugin to toggle a popup terminal window with a mapping and every existing terminal plugins seem over complicated.
 
-Combined with the ability to choose which process to execute, this plugin became not only a terminal plugin but it can also toggle a popup window with any TUI application of your choosing.
+Combined with the ability to choose which process to execute, this plugin became not only a terminal plugin
+but it can also toggle a popup window with any TUI application of your choosing.
 
 For simplicity, it supports toggling only one of each process (one bash, one lazygit, ...) at a time.
 
