@@ -63,7 +63,11 @@ function M.toggle(process)
 end
 
 function M.setup(opts)
-    size = opts.size
+    opts = opts or {}
+
+    size = opts.size or size
+
+    vim.api.nvim_command('command! -nargs=? Term lua require("termplug").toggle(<f-args>)')
 end
 
 return M
