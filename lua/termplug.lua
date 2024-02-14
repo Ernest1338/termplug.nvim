@@ -1,17 +1,19 @@
 local M = {}
 
+local api = vim.api
+
 local buffers, windows = {}, {}
 local size = 0.9
 
 local function open_window(process)
-    local ui_info = vim.api.nvim_list_uis()[1]
+    local ui_info = api.nvim_list_uis()[1]
     local width = math.floor(ui_info.width * size)
     local height = math.floor(ui_info.height * size)
     local border = "rounded"
     if size == 1 then
         border = "none"
     end
-    windows[process] = vim.api.nvim_open_win(buffers[process], true, {
+    windows[process] = api.nvim_open_win(buffers[process], true, {
         relative = "editor",
         width = width,
         height = height,
@@ -23,17 +25,17 @@ local function open_window(process)
 end
 
 local function create_window(process)
-    local termplug_augroup = vim.api.nvim_create_augroup("termplug_" .. process, { clear = true })
-    vim.api.nvim_create_autocmd("TermClose", {
+    local termplug_augroup = api.nvim_create_augroup("termplug_" .. process, { clear = true })
+    api.nvim_create_autocmd("TermClose", {
         callback = function()
-            if vim.api.nvim_get_current_buf() ~= buffers[process] then
+            if api.nvim_get_current_buf() ~= buffers[process] then
                 return
             end
-            if vim.api.nvim_buf_is_valid(buffers[process]) then
-                vim.api.nvim_buf_delete(buffers[process], { force = true })
+            if api.nvim_buf_is_valid(buffers[process]) then
+                api.nvim_buf_delete(buffers[process], { force = true })
             end
-            if vim.api.nvim_win_is_valid(windows[process]) then
-                vim.api.nvim_win_close(windows[process], true)
+            if api.nvim_win_is_valid(windows[process]) then
+                api.nvim_win_close(windows[process], true)
             end
         end,
         group = termplug_augroup,
@@ -46,15 +48,15 @@ function M.toggle(process)
     if process == nil then
         process = "bash"
     end
-    if buffers[process] == nil or not vim.api.nvim_buf_is_valid(buffers[process]) then
-        local new_buf = vim.api.nvim_create_buf(false, true)
+    if buffers[process] == nil or not api.nvim_buf_is_valid(buffers[process]) then
+        local new_buf = api.nvim_create_buf(false, true)
         buffers[process] = new_buf
         create_window(process)
         vim.fn.termopen(process)
         vim.cmd("startinsert")
     else
-        if vim.api.nvim_get_current_buf() == buffers[process] then
-            vim.api.nvim_win_close(windows[process], true)
+        if api.nvim_get_current_buf() == buffers[process] then
+            api.nvim_win_close(windows[process], true)
         else
             open_window(process)
             vim.cmd("startinsert")
@@ -67,7 +69,11 @@ function M.setup(opts)
 
     size = opts.size or size
 
-    vim.api.nvim_command('command! -nargs=? Term lua require("termplug").toggle(<f-args>)')
+    api.nvim_create_user_command("Term", function(input)
+        local option = input.args
+        if #option == 0 then option = nil end
+        M.toggle(option)
+    end, { force = true, nargs = "*" })
 end
 
 return M
