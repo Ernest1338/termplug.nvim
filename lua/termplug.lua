@@ -4,6 +4,7 @@ local api = vim.api
 
 local buffers, windows = {}, {}
 local size = 0.9
+local window_currently_opened = false
 
 function M.open_window(process)
     local ui_info = api.nvim_list_uis()[1]
@@ -37,6 +38,7 @@ function M.create_window(process)
             if api.nvim_win_is_valid(windows[process]) then
                 api.nvim_win_close(windows[process], true)
             end
+            window_currently_opened = false
         end,
         group = termplug_augroup,
     })
@@ -48,17 +50,23 @@ function M.toggle(process)
         process = "bash"
     end
     if buffers[process] == nil or not api.nvim_buf_is_valid(buffers[process]) then
+        if window_currently_opened == true then return end
         local new_buf = api.nvim_create_buf(false, true)
         buffers[process] = new_buf
         M.create_window(process)
         vim.fn.termopen(process)
         vim.cmd("startinsert")
+        window_currently_opened = true
     else
         if api.nvim_get_current_buf() == buffers[process] then
+            if window_currently_opened == false then return end
             api.nvim_win_close(windows[process], true)
+            window_currently_opened = false
         else
+            if window_currently_opened == true then return end
             M.open_window(process)
             vim.cmd("startinsert")
+            window_currently_opened = true
         end
     end
 end
