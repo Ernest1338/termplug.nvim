@@ -50,7 +50,7 @@ function M.toggle(process)
         process = "bash"
     end
     if buffers[process] == nil or not api.nvim_buf_is_valid(buffers[process]) then
-        if window_currently_opened == true then return end
+        if window_currently_opened == true then return end -- TODO: instead of return, close the window
         local new_buf = api.nvim_create_buf(false, true)
         buffers[process] = new_buf
         M.create_window(process)
@@ -59,11 +59,11 @@ function M.toggle(process)
         window_currently_opened = true
     else
         if api.nvim_get_current_buf() == buffers[process] then
-            if window_currently_opened == false then return end
+            if window_currently_opened == false then return end -- TODO: instead of return, close the window
             api.nvim_win_close(windows[process], true)
             window_currently_opened = false
         else
-            if window_currently_opened == true then return end
+            if window_currently_opened == true then return end -- TODO: instead of return, close the window
             M.open_window(process)
             vim.cmd("startinsert")
             window_currently_opened = true
