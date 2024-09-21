@@ -45,15 +45,16 @@ vim.keymap.set({ "n", "t" }, "<C-g>", "<cmd> Term lazygit <CR>")
 
 ## 🔧 Configuration
 
-There is only one configuration option: `size`.
+There are only two configuration options: `size` and `shell`.
 
-It controlls how big will be the popup window. Takes values from `0.0` to `1.0` (defaults to 0.9).
+`size` controlls how big will be the popup window. Takes values from `0.0` to `1.0` (defaults to 0.9).
+`shell` controls which default shell to open (bash, zsh, tmux, etc.) when no arguments are passed to `:Term` (defaults to `bash`)
 
 **Set the size value to `1` for a full screen terminal popup.**
 
 - For [folke/lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
-{ "Ernest1338/termplug.nvim", config = { size = 0.5 } },
+{ "Ernest1338/termplug.nvim", config = { size = 0.5, shell = "zsh" } },
 ```
 
 - For [wbthomason/packer.nvim](https://github.com/wbthomason/packer.nvim)
@@ -61,7 +62,7 @@ It controlls how big will be the popup window. Takes values from `0.0` to `1.0` 
 use {
     "Ernest1338/termplug.nvim",
     config = function()
-        require("termplug").setup{ size = 0.5 }
+        require("termplug").setup{ size = 0.5, shell = "tmux" }
     end
 }
 ```
@@ -70,7 +71,7 @@ use {
 ```lua
 later(function()
     add("Ernest1338/termplug.nvim")
-    require("termplug").setup({ size = 0.5 })
+    require("termplug").setup({ size = 0.5, shell = "fish" })
 end)
 ```
 

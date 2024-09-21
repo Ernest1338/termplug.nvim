@@ -4,6 +4,7 @@ local api = vim.api
 
 local buffers, windows = {}, {}
 local size = 0.9
+local shell = "bash"
 local window_currently_opened = false
 
 function M.get_float_config()
@@ -69,9 +70,6 @@ function M.create_window(process)
 end
 
 function M.toggle(process)
-    if process == nil then
-        process = "bash"
-    end
     local t_buffer = buffers[process]
     if t_buffer == nil or not api.nvim_buf_is_valid(t_buffer) then
         if window_currently_opened == true then return end
@@ -102,11 +100,14 @@ function M.setup(opts)
     opts = opts or {}
 
     size = opts.size or size
+    shell = opts.shell or shell
 
     api.nvim_create_user_command("Term", function(input)
-        local process = input.args
-        if #process == 0 then
-            process = nil
+        local process
+        if #input.args == 0 then
+            process = shell
+        else
+            process = input.args
         end
         M.toggle(process)
     end, { force = true, nargs = "*" })
