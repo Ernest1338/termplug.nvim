@@ -30,6 +30,12 @@ function M.open_window(process)
     windows[process] = api.nvim_open_win(buffers[process], true, M.get_float_config())
 end
 
+function M.refresh_window(process)
+    local t_window = windows[process]
+    if not api.nvim_win_is_valid(t_window) then return end
+    api.nvim_win_set_config(t_window, M.get_float_config())
+end
+
 function M.create_window(process)
     local termplug_augroup = api.nvim_create_augroup("termplug_" .. process, { clear = true })
     local term_buffer = buffers[process]
@@ -58,12 +64,7 @@ function M.create_window(process)
     api.nvim_create_autocmd("VimResized", {
         buffer = term_buffer,
         group = termplug_augroup,
-        callback = function()
-            local t_window = windows[process]
-            if not api.nvim_win_is_valid(t_window) then return end
-
-            api.nvim_win_set_config(t_window, M.get_float_config())
-        end
+        callback = function() M.refresh_window(process) end
     })
 
     M.open_window(process)
@@ -79,6 +80,7 @@ function M.toggle(process)
         M.create_window(process)
         vim.fn.termopen(process)
         vim.cmd("startinsert")
+        vim.schedule(function() M.refresh_window(process) end)
         window_currently_opened = true
     else
         if api.nvim_get_current_buf() == t_buffer then
