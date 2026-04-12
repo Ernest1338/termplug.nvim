@@ -78,7 +78,7 @@ function M.toggle(process)
         local new_buf = api.nvim_create_buf(false, true)
         buffers[process] = new_buf
         M.create_window(process)
-        vim.fn.termopen(process)
+        vim.fn.jobstart(process, { term = true })
         vim.cmd("startinsert")
         vim.schedule(function() M.refresh_window(process) end)
         window_currently_opened = true
